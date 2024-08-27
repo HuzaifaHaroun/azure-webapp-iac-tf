@@ -4,7 +4,7 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    storage_account_name = "noorterraformstatest"
+    storage_account_name = "noorterraformstatest1"
     container_name       = "terraform-state"
     key                  = "noor-azure-web-iac.terraform.tfstate"
     # Can also be set via `ARM_ACCESS_KEY` environment variable.
