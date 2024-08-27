@@ -1,0 +1,40 @@
+name: Terraform Plan 
+
+on:
+  workflow_dispatch:
+
+env:
+  TERRAFORM_VERSION: '1.9.2'           # Set this to the Terraform version to use
+  TERRAFORM_WORKSPACE: 'default'       # Set this to your desired Terraform workspace (optional)
+
+permissions:
+  contents: read
+  id-token: write  # Required for GitHub OIDC to authenticate with Azure
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+    - name: Authenticate with Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Terraform Init
+      env:
+        ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCOUNT_ACCESS_KEY }}
+      run: terraform init
+
+    - name: Terraform Plan
+      env: 
+        ARM_ACCESS_KEY: ${{ secrets.STORAGE_ACCOUNT_ACCESS_KEY }}
+        TF_VAR_vm_ssh_public_key: ${{ secrets.AZURE_VM_SSH_PUBLIC_KEY }}
+      run: terraform plan
