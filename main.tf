@@ -84,7 +84,7 @@ resource "azurerm_linux_virtual_machine" "webserver_vm" {
   name                = "noor-webserver-machine"
   resource_group_name = azurerm_resource_group.webserver_rg.name
   location            = azurerm_resource_group.webserver_rg.location
-  size                = "Standard_F2"
+  size                = "Standard_D1_v2"
   admin_username      = "adminuser"
   tags                = local.tags
   network_interface_ids = [
